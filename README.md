@@ -94,12 +94,6 @@ git clone https://github.com/helloalicesmith/bootstrap-debian.git \
 cd ~/.local/share/bootstrap-debian
 ```
 
-Preview local checks and the installation plan:
-
-```bash
-bash bootstrap.sh --dry-run
-```
-
 Install:
 
 ```bash
@@ -145,8 +139,6 @@ The bootstrap does not automatically execute the Neovim configuration.
 - APT is not allowed to automatically remove conflicting packages.
 - Package installation may start system services.
 - No automatic reboot or explicit network restart is performed.
-- Dry run performs local checks without sudo, downloads or file writes.
-- Dry run does not verify package availability or runtime behavior.
 - Installation logs are stored in ~/.local/state/bootstrap-debian/.
 - Firmware, suspend, brightness and other hardware-specific behavior
   must be tested on the actual computer.

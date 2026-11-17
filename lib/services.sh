@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+# Sourced by bootstrap.sh.
+
 greetd_config() {
-  cat <<'EOF'
+    cat <<'EOF'
 [terminal]
 vt = 1
 
@@ -12,114 +14,134 @@ EOF
 }
 
 check_services() {
-  local dm=''
+    local dm=''
 
-  if [[ -L /etc/systemd/system/display-manager.service ]]; then
-    dm=$(basename \
-      "$(readlink -f /etc/systemd/system/display-manager.service)")
+    if [[ -L /etc/systemd/system/display-manager.service ]]; then
+        dm=$(basename \
+            "$(readlink -f /etc/systemd/system/display-manager.service)")
+    elif [[ -e /etc/systemd/system/display-manager.service ]]; then
+        die 'A nonstandard display-manager.service already exists.'
+    fi
 
-  elif [[ -e /etc/systemd/system/display-manager.service ]]; then
-    die 'A nonstandard display-manager.service already exists.'
-  fi
+    [[ -z "$dm" || "$dm" == greetd.service ]] ||
+        die "Another display manager is configured: $dm. Automatic migration is not supported."
 
-  [[ -z "$dm" || "$dm" == greetd.service ]] ||
-    die "Another display manager is configured: $dm. Automatic migration is not supported."
+    # Accept our configuration when resuming or repeating an installation.
+    if [[ -e /etc/greetd/config.toml ]]; then
+        [[ -r /etc/greetd/config.toml ]] ||
+            die 'The existing greetd configuration is unreadable.'
 
-  if [[ "$dm" == greetd.service ]]; then
-    [[ -r /etc/greetd/config.toml ]] ||
-      die 'The existing greetd configuration is missing or unreadable.'
+        cmp -s \
+            /etc/greetd/config.toml \
+            <(greetd_config) ||
+            die 'The existing greetd configuration differs from the installer configuration.'
+    fi
 
-    cmp -s \
-      /etc/greetd/config.toml \
-      <(greetd_config) ||
-      die 'The existing greetd configuration differs from the installer configuration.'
+    if getent passwd sway-greeter >/dev/null; then
+        local greeter_uid
+        local greeter_home
+        local greeter_shell
 
-  elif [[ -e /etc/greetd/config.toml ]]; then
-    die 'An existing greetd configuration was found. Review it before installation.'
-  fi
+        greeter_uid=$(id -u sway-greeter)
+        greeter_home=$(getent passwd sway-greeter | cut -d: -f6)
+        greeter_shell=$(getent passwd sway-greeter | cut -d: -f7)
 
-  if getent passwd sway-greeter >/dev/null; then
-    local greeter_uid
-    greeter_uid=$(id -u sway-greeter)
+        [[ "$greeter_uid" != 0 ]] ||
+            die 'The greeter account must not be root.'
 
-    [[ "$greeter_uid" != 0 ]] ||
-      die 'The greeter account must not be root.'
-
-    local greeter_home greeter_shell
-
-    greeter_home=$(getent passwd sway-greeter | cut -d: -f6)
-    greeter_shell=$(getent passwd sway-greeter | cut -d: -f7)
-
-    [[ "$greeter_home" == /var/lib/sway-greeter &&
-      "$greeter_shell" == /usr/sbin/nologin ]] ||
-      die 'The existing sway-greeter account has unexpected settings.'
-  fi
+        [[ "$greeter_home" == /var/lib/sway-greeter &&
+           "$greeter_shell" == /usr/sbin/nologin ]] ||
+            die 'The existing sway-greeter account has unexpected settings.'
+    fi
 }
 
 configure_services() {
-  log 'Configuring greetd and tuigreet'
+    log 'Configuring greetd and tuigreet'
 
-  [[ -x /usr/bin/tuigreet && -x /usr/bin/sway ]] ||
-    die 'The tuigreet or Sway executable is missing.'
+    [[ -x /usr/bin/tuigreet && -x /usr/bin/sway ]] ||
+        die 'The tuigreet or Sway executable is missing.'
 
-  if ! getent passwd sway-greeter >/dev/null; then
-    sudo useradd \
-      --system \
-      --user-group \
-      --home-dir /var/lib/sway-greeter \
-      --create-home \
-      --shell /usr/sbin/nologin \
-      sway-greeter
-  fi
+    if ! getent passwd sway-greeter >/dev/null; then
+        sudo useradd \
+            --system \
+            --user-group \
+            --home-dir /var/lib/sway-greeter \
+            --create-home \
+            --shell /usr/sbin/nologin \
+            sway-greeter
+    fi
 
-  [[ "$(id -u sway-greeter)" != 0 ]] ||
-    die 'The greeter must not run as root.'
+    [[ "$(id -u sway-greeter)" != 0 ]] ||
+        die 'The greeter must not run as root.'
 
-  sudo install -d -m 0755 /etc/greetd
+    sudo install -d -m 0755 /etc/greetd
 
-  greetd_config |
-    sudo tee /etc/greetd/config.toml >/dev/null
+    greetd_config |
+        sudo tee /etc/greetd/config.toml >/dev/null
 
-  sudo chmod 0644 /etc/greetd/config.toml
+    sudo chmod 0644 /etc/greetd/config.toml
 
-  sudo systemctl unmask --runtime greetd.service
-  GREETD_MASKED_BY_US=0
+    log 'Reserving tty1 for greetd'
 
-  sudo systemctl enable greetd.service
+    # Do not use --now: installation may be running on tty1.
+    # Leave all other virtual terminals available.
+    sudo systemctl disable getty@tty1.service
+    sudo systemctl mask getty@tty1.service
 
-  # Set the display-manager alias explicitly.
-  local unit
+    log 'Configuring greetd terminal ownership'
 
-  unit=$(systemctl show greetd.service \
-    --property=FragmentPath \
-    --value)
+    sudo install -d -m 0755 \
+        /etc/systemd/system/greetd.service.d
 
-  [[ -n "$unit" && -f "$unit" ]] ||
-    die 'The greetd systemd unit was not found.'
+    sudo tee \
+        /etc/systemd/system/greetd.service.d/tty.conf \
+        >/dev/null <<'EOF'
+[Unit]
+Conflicts=getty@tty1.service
+After=getty@tty1.service
+EOF
 
-  sudo ln -sfnT "$unit" \
-    /etc/systemd/system/display-manager.service
+    sudo systemctl daemon-reload
 
-  sudo systemctl daemon-reload
-  sudo systemctl set-default graphical.target
+    sudo systemctl unmask --runtime greetd.service
+    GREETD_MASKED_BY_US=0
 
-  log 'Enabling network and Bluetooth services for the next boot'
+    # Enable for the next boot without stopping the current session.
+    sudo systemctl enable greetd.service
 
-  sudo systemctl enable \
-    NetworkManager.service \
-    bluetooth.service
+    # Set the display-manager alias explicitly.
+    local unit
 
-  # Do not restart the active network connection.
-  log 'Enabling user audio services'
+    unit=$(systemctl show greetd.service \
+        --property=FragmentPath \
+        --value)
 
-  if systemctl --user show-environment >/dev/null 2>&1; then
-    systemctl --user enable \
-      pipewire.socket \
-      pipewire-pulse.socket \
-      wireplumber.service
-  else
-    printf '%s\n' \
-      'The user systemd bus is unavailable.' \
-      'Check PipeWire and WirePlumber after a fresh login.'
-  fi
+    [[ -n "$unit" && -f "$unit" ]] ||
+        die 'The greetd systemd unit was not found.'
+
+    sudo ln -sfnT "$unit" \
+        /etc/systemd/system/display-manager.service
+
+    sudo systemctl daemon-reload
+    sudo systemctl set-default graphical.target
+
+    log 'Enabling network and Bluetooth services for the next boot'
+
+    # Do not restart the active network connection.
+    sudo systemctl enable \
+        NetworkManager.service \
+        bluetooth.service
+
+    log 'Enabling user audio services'
+
+    if systemctl --user show-environment >/dev/null 2>&1; then
+        systemctl --user enable \
+            pipewire.socket \
+            pipewire-pulse.socket \
+            wireplumber.service
+    else
+        printf '%s\n' \
+            'The user systemd bus is unavailable.' \
+            'Check PipeWire and WirePlumber after a fresh login.'
+    fi
 }

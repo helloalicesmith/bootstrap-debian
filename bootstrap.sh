@@ -2,12 +2,10 @@
 # Debian 13 workstation bootstrap. Run from a permanent local Git clone.
 set -Eeuo pipefail
 ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
-DRY_RUN=0
 case "${1:-}" in
 '') ;;
---dry-run) DRY_RUN=1 ;;
 --help | -h)
-  printf '%s\n' 'Usage: bash bootstrap.sh [--dry-run]' 'Run as a regular user. Requires Debian 13, Internet, Git and working sudo.' 'No backups or dotfile overwrites. Installs upstream Neovim and Yazi, then deploys configuration.'
+  printf '%s\n' 'Usage: bash bootstrap.sh' 'Run as a regular user. Requires Debian 13, Internet, Git and working sudo.' 'No backups or dotfile overwrites. Installs upstream Neovim and Yazi, then deploys configuration.'
   exit 0
   ;;
 *)
@@ -44,13 +42,6 @@ printf 'Repository: %s\nUser: %s\n' "$ROOT" "$(id -un)"
 printf 'Packages: %s\n' "${PACKAGES[*]}"
 printf 'Link: %s\n' "${LINKS[@]}"
 printf '%s\n' 'Configure greetd/tuigreet, PipeWire, NetworkManager and Bluetooth; set Zsh.' 'Install latest stable Neovim into ~/.local/opt/neovim and Yazi into ~/.local/opt/yazi.'
-if ((DRY_RUN)); then
-  log 'Dry run complete: no sudo, downloads, file writes or service changes.'
-  printf '%s\n' 'Local checks only: package availability and runtime behavior are not verified.'
-  exit 0
-fi
-read -r -p 'Install on this Debian 13 system? [y/N] ' answer
-[[ "$answer" == y || "$answer" == Y ]] || exit 0
 sudo -v
 mkdir -p "$HOME/.local/state/bootstrap-debian"
 LOG="$HOME/.local/state/bootstrap-debian/install-$(date +%Y%m%d-%H%M%S)-$$.log"
@@ -68,5 +59,5 @@ link_dotfiles
 configure_user
 configure_services
 log 'Installation complete'
-printf '%s\n' 'Reboot when convenient and log in through tuigreet.' 'Keep this repository in place: your dotfiles are symlinks into home/.' 'No NVM, Node.js, .vimrc deployment or shared theme generator.' 'Repeated runs keep the managed Neovim version; no automatic upgrades.' 'No automatic reboot. Package installation may start services.'
+printf '%s\n' 'Reboot when convenient and log in through tuigreet.' 'No automatic reboot. Package installation may start services.'
 printf 'Log: %s\n' "$LOG"
