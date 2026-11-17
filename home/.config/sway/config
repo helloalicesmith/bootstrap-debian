@@ -197,3 +197,48 @@ bindsym --locked XF86MonBrightnessUp exec brightnessctl --class=backlight set +5
 
 # Win+Shift+4 — выделить область и скопировать скриншот в буфер.
 bindsym alt+Shift+4 exec sh -c 'geometry=$(slurp) || exit; grim -g "$geometry" - | wl-copy --type image/png'
+
+# ─── Оформление окон ─────────────────────────────────────────
+
+font pango:DejaVu Sans 10
+
+# Тонкие рамки без заголовков в обычной раскладке.
+default_border pixel 2
+default_floating_border pixel 2
+
+# Применить рамки к уже открытым окнам.
+for_window [all] border pixel 2
+
+# Расстояния между окнами и краями экрана.
+gaps inner 6
+gaps outer 3
+
+# Показывать рамки и у краёв экрана.
+hide_edge_borders none
+
+# Не переключать фокус при простом движении мыши.
+focus_follows_mouse no
+
+# Перетаскивание плавающих окон: Win + левая кнопка мыши.
+floating_modifier $mod normal
+
+# Цвета:
+#                        border    background text      indicator child_border
+
+# Активное окно — голубая рамка.
+client.focused           #89b4fa   #313244    #cdd6f4   #f9e2af   #89b4fa
+
+# Выбранное окно в контейнере, который сейчас не в фокусе.
+client.focused_inactive  #45475a   #313244    #a6adc8   #45475a   #45475a
+
+# Неактивные окна — тёмные рамки.
+client.unfocused         #313244   #1e1e2e    #9399b2   #313244   #313244
+
+# Окно, требующее внимания — красная рамка.
+client.urgent            #f38ba8   #f38ba8    #1e1e2e   #f38ba8   #f38ba8
+
+# Фон за содержимым окна при изменении размеров.
+client.background        #1e1e2e
+
+output * bg ~/.config/sway/wallpapers/default.jpeg fill
+
