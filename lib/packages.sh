@@ -66,6 +66,12 @@ build_packages() {
     gvfs
     gvfs-backends
     tumbler
+
+    jq
+    tar
+    gzip
+    build-essential
+    python3-venv
   )
 }
 
