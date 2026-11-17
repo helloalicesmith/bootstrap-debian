@@ -1,5 +1,8 @@
 # Debian Workstation Bootstrap
 
+https://www.debian.org/distrib/netinst
+For VM: bash bootstrap.sh --software-rendering
+
 A personal workstation installer for Debian 13 (trixie).
 
 The installer deploys configuration files using symlinks from a permanent
