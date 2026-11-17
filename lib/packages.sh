@@ -2,7 +2,6 @@
 
 build_packages() {
   PACKAGES=(
-    git
     ca-certificates
     curl
 
