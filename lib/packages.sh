@@ -53,7 +53,6 @@ build_packages() {
     xdg-utils
     xdg-user-dirs
 
-    yazi
     vim
     tmux
     zsh
