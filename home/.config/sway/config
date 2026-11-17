@@ -40,7 +40,7 @@ input type:touchpad {
     # Естественное направление прокрутки.
     natural_scroll disabled
 
-    scroll_factor 0.08
+    scroll_factor 0.3
 }
 
 # ─── Запуск программ ─────────────────────────────────────────

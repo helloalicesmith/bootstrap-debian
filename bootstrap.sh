@@ -43,21 +43,13 @@ printf 'Packages: %s\n' "${PACKAGES[*]}"
 printf 'Link: %s\n' "${LINKS[@]}"
 printf '%s\n' 'Configure greetd/tuigreet, PipeWire, NetworkManager and Bluetooth; set Zsh.' 'Install latest stable Neovim into ~/.local/opt/neovim and Yazi into ~/.local/opt/yazi.'
 sudo -v
-mkdir -p "$HOME/.local/state/bootstrap-debian"
-LOG="$HOME/.local/state/bootstrap-debian/install-$(date +%Y%m%d-%H%M%S)-$$.log"
-(
-  umask 077
-  : >"$LOG"
-)
-exec > >(tee -a "$LOG") 2>&1
-log "Installation log: $LOG"
 install_packages
 install_ohmyzsh
+install_catppuccin_tmux
 install_neovim
 install_yazi
 link_dotfiles
 configure_user
 configure_services
 log 'Installation complete'
-printf '%s\n' 'Reboot when convenient and log in through tuigreet.' 'No automatic reboot. Package installation may start services.'
-printf 'Log: %s\n' "$LOG"
+printf '%s\n' 'Done' 'Reboot your system' 

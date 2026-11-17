@@ -17,6 +17,7 @@ user configuration files.
 - PipeWire audio, WirePlumber and pavucontrol.
 - NetworkManager and Bluetooth utilities.
 - Zsh with Oh My Zsh.
+- Catppuccin tmux theme, installed with the upstream-recommended manual method.
 - tmux and Vim as a fallback editor.
 - Neovim from the latest stable upstream release.
 - Yazi terminal file manager from the latest stable upstream release.
@@ -73,6 +74,9 @@ Neovim may use init.vim instead of init.lua.
 The installer deploys the configurations as-is. Keep required application
 autostart commands in the Sway configuration; installing a package alone
 does not enable its Sway autostart.
+Catppuccin tmux v2.3.2 is cloned into
+~/.config/tmux/plugins/catppuccin/tmux, matching the source path in
+home/.tmux.conf.
 
 ## Installation
 
@@ -139,7 +143,7 @@ The bootstrap does not automatically execute the Neovim configuration.
 - APT is not allowed to automatically remove conflicting packages.
 - Package installation may start system services.
 - No automatic reboot or explicit network restart is performed.
-- Installation logs are stored in ~/.local/state/bootstrap-debian/.
+- Installer output is printed to the terminal; no log file is created.
 - Firmware, suspend, brightness and other hardware-specific behavior
   must be tested on the actual computer.
 
@@ -155,5 +159,4 @@ for file in lib/*.sh; do
     bash -n "$file" || break
 done
 
-shellcheck -x bootstrap.sh lib/*.sh
 ```

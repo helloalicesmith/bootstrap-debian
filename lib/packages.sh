@@ -113,3 +113,30 @@ install_ohmyzsh() {
     https://github.com/ohmyzsh/ohmyzsh.git \
     "$HOME/.oh-my-zsh"
 }
+
+install_catppuccin_tmux() {
+  local plugin="$HOME/.config/tmux/plugins/catppuccin/tmux"
+  local version=v2.3.2
+  local parent
+
+  for parent in "$HOME/.config/tmux" "$HOME/.config/tmux/plugins" "$HOME/.config/tmux/plugins/catppuccin"; do
+    [[ ! -L "$parent" ]] || die "Installation parent is a symlink: $parent"
+    [[ ! -e "$parent" || -d "$parent" ]] || die "Not a directory: $parent"
+  done
+
+  if [[ -e "$plugin" || -L "$plugin" ]]; then
+    [[ -d "$plugin" && ! -L "$plugin" &&
+      -f "$plugin/catppuccin.tmux" &&
+      "$(git -C "$plugin" remote get-url origin 2>/dev/null)" == https://github.com/catppuccin/tmux.git &&
+      "$(git -C "$plugin" describe --tags --exact-match --match "$version" 2>/dev/null)" == "$version" ]] ||
+      die "Conflicting or incomplete Catppuccin tmux installation: $plugin"
+    log "Keeping Catppuccin tmux $version"
+    return
+  fi
+
+  log "Installing Catppuccin tmux $version (recommended manual method)"
+  mkdir -p -- "$(dirname -- "$plugin")"
+  git clone --depth 1 --branch "$version" \
+    https://github.com/catppuccin/tmux.git \
+    "$plugin"
+}
