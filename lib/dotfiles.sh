@@ -103,33 +103,6 @@ collect_dotfiles() {
   fi
 }
 
-validate_sources() {
-  log 'Checking Zsh syntax'
-
-  zsh -n "$ROOT/home/.zshrc"
-
-  log 'Checking the source Sway configuration'
-
-  (
-    set -Eeuo pipefail
-
-    # A minimal console session may not provide XDG_RUNTIME_DIR.
-    # Use a private temporary directory for validation only.
-    if [[ -z "${XDG_RUNTIME_DIR:-}" ||
-      ! -d "${XDG_RUNTIME_DIR:-}" ]]; then
-      runtime_dir=$(mktemp -d)
-      chmod 700 "$runtime_dir"
-
-      trap 'rm -rf -- "$runtime_dir"' EXIT
-
-      export XDG_RUNTIME_DIR="$runtime_dir"
-    fi
-
-    sway --validate \
-      --config "$ROOT/home/.config/sway/config"
-  )
-}
-
 link_dotfiles() {
   log 'Deploying configuration symlinks'
 
