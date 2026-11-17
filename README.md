@@ -29,9 +29,6 @@ Upstream downloads require a SHA-256 digest from GitHub release metadata.
 Managed upstream installations are retained on repeated runs and are not
 automatically upgraded.
 
-NVM, Node.js, external editor plugins, language servers and Nerd Fonts
-are not installed automatically.
-
 ## Requirements
 
 - Debian 13 with systemd.
@@ -54,7 +51,6 @@ lib/
   dotfiles.sh
   services.sh
   neovim.sh
-  yazi.sh
 home/
   .zshrc
   .tmux.conf
