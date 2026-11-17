@@ -1,7 +1,6 @@
 # Debian Workstation Bootstrap
 
 https://www.debian.org/distrib/netinst
-For VM: bash bootstrap.sh --software-rendering
 
 A personal workstation installer for Debian 13 (trixie).
 
@@ -20,21 +19,17 @@ user configuration files.
 - Zsh with Oh My Zsh.
 - tmux and Vim as a fallback editor.
 - Neovim from the latest stable upstream release.
-- Yazi terminal file manager.
 - Firefox ESR and Thunar.
 - Screenshot, clipboard and brightness utilities.
 - Desktop portals, fonts and an authentication agent.
 
-Yazi is installed through APT when a package candidate is available.
-Otherwise, the installer downloads an official upstream release.
-
-Upstream downloads require a SHA-256 digest from GitHub release metadata.
-Managed upstream installations are retained on repeated runs and are not
-automatically upgraded.
+Neovim is downloaded from its official GitHub release and verified against
+the SHA-256 digest in release metadata. The managed installation is retained
+on repeated runs and is not automatically upgraded.
 
 ## Requirements
 
-- Debian 13 with systemd.
+- Debian 13 (trixie) amd64 with systemd, installed from the netinst image.
 - A regular user with working sudo.
 - Internet access.
 - Git and CA certificates.
@@ -68,19 +63,13 @@ home/
     fuzzel/fuzzel.ini
     nvim/
       init.lua
-    yazi/                 # Optional
 ```
 
 Neovim may use init.vim instead of init.lua.
 
-The Sway configuration must contain:
-
-```text
-output * bg ~/.config/sway/wallpapers/default.jpeg fill
-```
-
-Keep the required application autostart commands in the Sway configuration.
-Installing a package alone does not enable its Sway autostart.
+The installer deploys the configurations as-is. Keep required application
+autostart commands in the Sway configuration; installing a package alone
+does not enable its Sway autostart.
 
 ## Installation
 
@@ -137,8 +126,8 @@ export VISUAL=nvim
 ```
 
 Neovim is installed into ~/.local/opt/neovim.
-Upstream Yazi is installed into ~/.local/opt/yazi.
-Their launchers are placed in ~/.local/bin.
+Its launcher is placed in ~/.local/bin, and its configuration is symlinked
+from home/.config/nvim.
 
 Editor plugins may be downloaded by your configuration on first launch.
 The bootstrap does not automatically execute the Neovim configuration.

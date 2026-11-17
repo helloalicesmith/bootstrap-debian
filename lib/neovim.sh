@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 # Save as lib/neovim.sh. Sourced by bootstrap.sh.
 check_neovim() {
-  case "$(uname -m)" in
-  x86_64) NVIM_PLATFORM=linux-x86_64 ;;
-  aarch64 | arm64) NVIM_PLATFORM=linux-arm64 ;;
-  *) die "Unsupported Neovim architecture: $(uname -m)" ;;
-  esac
+  NVIM_PLATFORM=linux-x86_64
   NVIM_DIR="$HOME/.local/opt/neovim"
   NVIM_LINK="$HOME/.local/bin/nvim"
   local parent

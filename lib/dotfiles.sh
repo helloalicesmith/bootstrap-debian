@@ -12,6 +12,7 @@ collect_dotfiles() {
     .config/waybar
     .config/mako
     .config/fuzzel
+    .config/nvim
   )
 
   local -a required=(
@@ -82,24 +83,6 @@ collect_dotfiles() {
   if [[ -e "$HOME/.oh-my-zsh" || -L "$HOME/.oh-my-zsh" ]]; then
     [[ -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]] ||
       die 'The existing Oh My Zsh installation is incomplete.'
-  fi
-
-  # Match an active wallpaper directive with a literal tilde.
-  # This intentionally requires the documented wallpaper path.
-  if ! awk '
-        $1 == "output" &&
-        $2 == "*" &&
-        $3 == "bg" &&
-        $4 == "~/.config/sway/wallpapers/default.jpeg" &&
-        $5 == "fill" {
-            found = 1
-        }
-
-        END {
-            exit !found
-        }
-    ' "$source/.config/sway/config"; then
-    die 'Add the documented default.jpeg wallpaper directive to the Sway config.'
   fi
 }
 
