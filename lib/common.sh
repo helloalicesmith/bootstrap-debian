@@ -76,7 +76,32 @@ preflight() {
 
   for file in "${network_files[@]}"; do
     [[ -r "$file" ]] ||
-      die "Cannot inspect the network configuration: $file"
+      if [[ ! -r "$file" ]]; then
+        if ((DRY_RUN)); then
+            printf 'WARNING: Cannot inspect %s without elevated permissions; network checks are incomplete.\n' \
+                "$file" >&2
+            continue
+        fi
+
+        printf 'Checking network configuration with sudo: %s\n' "$file"
+
+        sudo test -r "$file" ||
+            die "Cannot read the network configuration: $file"
+
+        if sudo awk '
+            $1 == "iface" && $2 != "lo" {
+                found = 1
+            }
+
+            END {
+                exit !found
+            }
+        ' "$file"; then
+            die "An ifupdown interface exists in $file. Review its NetworkManager migration first."
+        fi
+
+        continue
+    fi
 
     if awk '
             $1 == "iface" && $2 != "lo" {
