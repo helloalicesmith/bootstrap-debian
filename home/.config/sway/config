@@ -1,0 +1,199 @@
+# ─── Основные программы ──────────────────────────────────────
+
+set $mod Mod4
+set $term kitty
+set $menu fuzzel
+
+# ─── Оформление ──────────────────────────────────────────────
+
+font pango:monospace 10
+
+default_border pixel 2
+default_floating_border pixel 2
+
+gaps inner 6
+gaps outer 3
+
+focus_follows_mouse no
+
+# Перетаскивание плавающих окон: Win + левая кнопка мыши.
+floating_modifier $mod normal
+
+# ─── Клавиатура ──────────────────────────────────────────────
+
+input type:keyboard {
+    xkb_layout "us,ru"
+
+    # Win+Space — переключение языка.
+    xkb_options "grp:win_space_toggle"
+}
+
+# ─── Тачпад ──────────────────────────────────────────────────
+
+input type:touchpad {
+    # Нажатие касанием.
+    tap enabled
+
+    # Прокрутка двумя пальцами.
+    scroll_method two_finger
+
+    # Естественное направление прокрутки.
+    natural_scroll disabled
+
+    scroll_factor 0.08
+}
+
+# ─── Запуск программ ─────────────────────────────────────────
+
+# Win+Enter — терминал.
+# bindsym $mod+Return exec $term
+bindsym Mod4+Return exec kitty
+
+# Alt+Space — меню приложений.
+bindsym Mod1+space exec $menu
+
+# Win+Shift+V — Vim в Kitty.
+bindsym $mod+Shift+v exec kitty nvim
+
+# Win+F2 — редактировать этот конфиг.
+bindsym $mod+F2 exec kitty vim ~/.config/sway/config
+
+# ─── Навигация в стиле Vim ───────────────────────────────────
+
+# Переключение между окнами — без Shift.
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Перемещение самих окон — с Shift.
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# ─── Управление окнами ───────────────────────────────────────
+
+# Win+Q — закрыть активное окно.
+bindsym $mod+q kill
+
+# Направление разделения для следующего окна.
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+# Полноэкранный режим.
+bindsym $mod+f fullscreen toggle
+
+# Переключение плавающего режима окна.
+bindsym $mod+Shift+space floating toggle
+
+# Переключение фокуса между плавающими и обычными окнами.
+bindsym $mod+Control+space focus mode_toggle
+
+# Режимы размещения окон.
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# ─── Рабочие столы ───────────────────────────────────────────
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+
+# Перенос окна на рабочий стол.
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+
+# Вернуться на предыдущий рабочий стол.
+bindsym $mod+Tab workspace back_and_forth
+
+# ─── Изменение размеров ──────────────────────────────────────
+
+mode "resize" {
+    bindsym h resize shrink width 10 px
+    bindsym j resize grow height 10 px
+    bindsym k resize shrink height 10 px
+    bindsym l resize grow width 10 px
+
+    bindsym Left resize shrink width 10 px
+    bindsym Down resize grow height 10 px
+    bindsym Up resize shrink height 10 px
+    bindsym Right resize grow width 10 px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# Win+R — войти в режим изменения размеров.
+# Затем H/J/K/L без модификаторов; Esc — выйти.
+bindsym $mod+r mode "resize"
+
+# ─── Блокировка и управление сессией ─────────────────────────
+
+# Ручная блокировка экрана.
+bindsym $mod+Shift+x exec swaylock -f -c 202020
+
+# Перечитать конфиг.
+bindsym $mod+Shift+c reload
+
+# Выход из Sway с подтверждением.
+bindsym $mod+Shift+e exec swaynag \
+    -t warning \
+    -m 'Exit Sway? Unsaved work may be lost.' \
+    -B 'Exit' 'swaymsg exit'
+
+# ─── Фон и панель ────────────────────────────────────────────
+
+output * bg #202020 solid_color
+
+bar {
+    position top
+    swaybar_command waybar
+}
+
+# ─── Системная интеграция ────────────────────────────────────
+
+# Агент графических запросов административных прав.
+exec /usr/libexec/polkit-mate-authentication-agent-1
+
+# Системные настройки Debian.
+include /etc/sway/config.d/*
+
+# ─── Уведомления ─────────────────────────────────────────────
+
+exec mako
+
+# Win+N — закрыть последнее уведомление.
+bindsym $mod+n exec makoctl dismiss
+
+# Win+Shift+N — закрыть все уведомления.
+bindsym $mod+Shift+n exec makoctl dismiss --all
+
+# Win+Ctrl+N — вернуть последнее закрытое уведомление.
+bindsym $mod+Control+n exec makoctl restore
+
+
+# ─── Специальные клавиши ThinkPad ────────────────────────────
+
+# F1: выключить / включить звук.
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+
+# F2/F3: громкость, с ограничением до 100%.
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+
+# F4: выключить / включить микрофон.
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+# F5/F6: яркость встроенного экрана.
+bindsym --locked XF86MonBrightnessDown exec brightnessctl --class=backlight set 5%- --min-value=1
+bindsym --locked XF86MonBrightnessUp exec brightnessctl --class=backlight set +5%
+
+# Win+Shift+4 — выделить область и скопировать скриншот в буфер.
+bindsym alt+Shift+4 exec sh -c 'geometry=$(slurp) || exit; grim -g "$geometry" - | wl-copy --type image/png'

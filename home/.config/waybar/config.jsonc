@@ -1,0 +1,111 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "spacing": 6,
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+
+    "modules-center": [
+        "clock"
+    ],
+
+    "modules-right": [
+	"sway/language",
+        "network",
+	"backlight",
+        "pulseaudio",
+        "battery",
+        "tray"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": false,
+        "format": "{name}",
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+
+    "sway/mode": {
+        "format": "  {}",
+        "tooltip": false
+    },
+
+    "clock": {
+        "format": "  {:%H:%M}",
+        "format-alt": "  {:%d.%m.%Y}",
+        "tooltip-format": "{:%A, %d.%m.%Y}"
+    },
+
+    "sway/language": {
+	    "format": "  {short}",
+	    "format-en": "  EN",
+	    "format-ru": "  RU",
+	    "tooltip": false
+    },
+
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "  LAN",
+        "format-disconnected": "  Нет сети",
+        "tooltip-format-wifi": "{essid}\nСигнал: {signalStrength}%\nIP: {ipaddr}",
+        "tooltip-format-ethernet": "Интерфейс: {ifname}\nIP: {ipaddr}",
+        "tooltip-format-disconnected": "Нет подключения",
+        "max-length": 25,
+        "interval": 5
+    },
+
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "  Выкл.",
+        "format-icons": {
+            "headphone": "",
+            "headset": "",
+            "default": ["", "", ""]
+        },
+        "scroll-step": 5,
+        "on-click": "pavucontrol",
+        "tooltip-format": "{desc}"
+    },
+
+    "battery": {
+        "interval": 10,
+        "states": {
+            "warning": 25,
+            "critical": 10
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-full": "  {capacity}%",
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
+        "tooltip-format": "{capacity}% — {timeTo}"
+    },
+
+    "backlight": {
+	    "format": "  {percent}%",
+	    "tooltip-format": "Яркость экрана: {percent}%",
+	    "on-scroll-up": "brightnessctl --class=backlight set +5%",
+	    "on-scroll-down": "brightnessctl --class=backlight --min-value=1 set 5%-"
+    },
+
+    "tray": {
+        "icon-size": 18,
+        "spacing": 10
+    }
+}

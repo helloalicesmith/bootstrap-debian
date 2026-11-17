@@ -1,0 +1,117 @@
+* {
+    font-family: "DejaVu Sans", "Font Awesome 6 Free", "Font Awesome 6 Brands", "FontAwesome";
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #1e1e2e;
+    color: #cdd6f4;
+}
+
+#workspaces {
+    margin: 4px 0 4px 8px;
+}
+
+#workspaces button {
+    padding: 0 10px;
+    margin-right: 4px;
+    border-radius: 6px;
+    background: #313244;
+    color: #a6adc8;
+}
+
+#workspaces button.focused {
+    background: #89b4fa;
+    color: #1e1e2e;
+}
+
+#workspaces button.urgent {
+    background: #f38ba8;
+    color: #1e1e2e;
+}
+
+#workspaces button:hover {
+    background: #45475a;
+    box-shadow: none;
+}
+
+#mode,
+#clock,
+#language,
+#network,
+#pulseaudio,
+#battery,
+#backlight,
+#tray {
+    margin: 4px 0;
+    padding: 0 12px;
+    background: #313244;
+    border-radius: 6px;
+}
+
+#mode {
+    color: #f9e2af;
+}
+
+#clock {
+    color: #cdd6f4;
+}
+
+#network {
+    color: #89b4fa;
+}
+
+#network.disconnected {
+    color: #f38ba8;
+}
+
+#pulseaudio {
+    color: #cba6f7;
+}
+
+#pulseaudio.muted {
+    color: #9399b2;
+}
+
+#battery {
+    color: #a6e3a1;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: #94e2d5;
+}
+
+#battery.warning:not(.charging) {
+    color: #f9e2af;
+}
+
+#battery.critical:not(.charging) {
+    background: #f38ba8;
+    color: #1e1e2e;
+}
+
+#tray {
+    margin-right: 8px;
+}
+
+tooltip {
+    background: #1e1e2e;
+    border: 1px solid #45475a;
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: #cdd6f4;
+}
+
+#backlight {
+    color: #f9e2af;
+}
+
+#language {
+    color: #f9e2af;
+}

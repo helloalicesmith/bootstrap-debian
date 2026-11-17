@@ -1,0 +1,35 @@
+# Шрифт и размеры
+font=monospace 11
+width=360
+height=160
+margin=12
+padding=12
+
+# Расположение
+anchor=top-right
+
+# Цвета
+background-color=#202020ee
+text-color=#eeeeee
+border-color=#89b4fa
+border-size=2
+border-radius=8
+
+# Поведение
+default-timeout=5000
+max-visible=5
+layer=overlay
+
+# Иконки
+icons=1
+max-icon-size=48
+
+# Левая кнопка — выполнить действие приложения, если оно есть.
+# Правая кнопка — закрыть уведомление.
+on-button-left=invoke-default-action
+on-button-right=dismiss
+
+# Критические уведомления не исчезают автоматически.
+[urgency=critical]
+border-color=#f38ba8
+default-timeout=0
