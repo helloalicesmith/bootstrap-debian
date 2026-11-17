@@ -57,6 +57,7 @@ build_packages() {
     zsh
     less
     unzip
+    file
     ripgrep
     fd-find
 

@@ -19,6 +19,7 @@ user configuration files.
 - Zsh with Oh My Zsh.
 - tmux and Vim as a fallback editor.
 - Neovim from the latest stable upstream release.
+- Yazi terminal file manager from the latest stable upstream release.
 - Firefox ESR and Thunar.
 - Screenshot, clipboard and brightness utilities.
 - Desktop portals, fonts and an authentication agent.
@@ -26,6 +27,7 @@ user configuration files.
 Neovim is downloaded from its official GitHub release and verified against
 the SHA-256 digest in release metadata. The managed installation is retained
 on repeated runs and is not automatically upgraded.
+Yazi is installed and verified in the same way.
 
 ## Requirements
 
@@ -49,6 +51,7 @@ lib/
   dotfiles.sh
   services.sh
   neovim.sh
+  yazi.sh
 home/
   .zshrc
   .tmux.conf
@@ -128,6 +131,8 @@ export VISUAL=nvim
 Neovim is installed into ~/.local/opt/neovim.
 Its launcher is placed in ~/.local/bin, and its configuration is symlinked
 from home/.config/nvim.
+Yazi and its helper `ya` are installed into ~/.local/opt/yazi, with launchers
+in ~/.local/bin. The `file` utility is installed as a Yazi prerequisite.
 
 Editor plugins may be downloaded by your configuration on first launch.
 The bootstrap does not automatically execute the Neovim configuration.

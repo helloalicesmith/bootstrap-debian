@@ -7,7 +7,7 @@ case "${1:-}" in
 '') ;;
 --dry-run) DRY_RUN=1 ;;
 --help | -h)
-  printf '%s\n' 'Usage: bash bootstrap.sh [--dry-run]' 'Run as a regular user. Requires Debian 13, Internet, Git and working sudo.' 'No backups or dotfile overwrites. Installs upstream Neovim and deploys its config.'
+  printf '%s\n' 'Usage: bash bootstrap.sh [--dry-run]' 'Run as a regular user. Requires Debian 13, Internet, Git and working sudo.' 'No backups or dotfile overwrites. Installs upstream Neovim and Yazi, then deploys configuration.'
   exit 0
   ;;
 *)
@@ -29,18 +29,21 @@ source "$ROOT/lib/dotfiles.sh"
 source "$ROOT/lib/services.sh"
 # shellcheck source=lib/neovim.sh
 source "$ROOT/lib/neovim.sh"
+# shellcheck source=lib/yazi.sh
+source "$ROOT/lib/yazi.sh"
 trap cleanup EXIT
 trap 'printf "\nInstallation failed at line %s in %s. Earlier changes remain; no automatic rollback.\n" "$LINENO" "${BASH_SOURCE[0]}" >&2' ERR
 preflight
 collect_dotfiles
 check_services
 check_neovim
+check_yazi
 build_packages
 log 'Installation plan'
 printf 'Repository: %s\nUser: %s\n' "$ROOT" "$(id -un)"
 printf 'Packages: %s\n' "${PACKAGES[*]}"
 printf 'Link: %s\n' "${LINKS[@]}"
-printf '%s\n' 'Configure greetd/tuigreet, PipeWire, NetworkManager and Bluetooth; set Zsh.' 'Install latest stable Neovim into ~/.local/opt/neovim.'
+printf '%s\n' 'Configure greetd/tuigreet, PipeWire, NetworkManager and Bluetooth; set Zsh.' 'Install latest stable Neovim into ~/.local/opt/neovim and Yazi into ~/.local/opt/yazi.'
 if ((DRY_RUN)); then
   log 'Dry run complete: no sudo, downloads, file writes or service changes.'
   printf '%s\n' 'Local checks only: package availability and runtime behavior are not verified.'
@@ -60,6 +63,7 @@ log "Installation log: $LOG"
 install_packages
 install_ohmyzsh
 install_neovim
+install_yazi
 link_dotfiles
 configure_user
 configure_services
