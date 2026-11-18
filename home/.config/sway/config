@@ -56,7 +56,7 @@ bindsym Mod1+space exec $menu
 bindsym $mod+Shift+v exec kitty nvim
 
 # Win+F2 — открыть корень репозитория в Neovim.
-bindsym $mod+F2 exec kitty --directory "$(dirname "$(readlink -f ~/.config/sway/config)")/../../.." nvim
+bindsym $mod+F2 exec kitty --directory "$(dirname "$(readlink -f ~/.config/sway/config)")/../../.." tmux new-session "/usr/bin/zsh -i -c 'exec nvim .'"
 
 # ─── Навигация в стиле Vim ───────────────────────────────────
 
