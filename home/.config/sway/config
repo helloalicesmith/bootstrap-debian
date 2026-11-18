@@ -55,8 +55,8 @@ bindsym Mod1+space exec $menu
 # Win+Shift+V — Vim в Kitty.
 bindsym $mod+Shift+v exec kitty nvim
 
-# Win+F2 — редактировать этот конфиг.
-bindsym $mod+F2 exec kitty vim ~/.config/sway/config
+# Win+F2 — открыть корень репозитория в Neovim.
+bindsym $mod+F2 exec kitty --directory "$(dirname "$(readlink -f ~/.config/sway/config)")/../../.." nvim
 
 # ─── Навигация в стиле Vim ───────────────────────────────────
 
