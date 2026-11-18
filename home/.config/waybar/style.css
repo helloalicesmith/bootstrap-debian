@@ -43,6 +43,7 @@ window#waybar {
 #language,
 #network,
 #pulseaudio,
+#memory,
 #battery,
 #backlight,
 #tray {
@@ -74,6 +75,19 @@ window#waybar {
 
 #pulseaudio.muted {
     color: #9399b2;
+}
+
+#memory {
+    color: #fab387;
+}
+
+#memory.warning {
+    color: #f9e2af;
+}
+
+#memory.critical {
+    background: #f38ba8;
+    color: #1e1e2e;
 }
 
 #battery {
