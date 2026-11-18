@@ -55,6 +55,7 @@ build_packages() {
 
     vim
     tmux
+    lazygit
     zsh
     less
     unzip
