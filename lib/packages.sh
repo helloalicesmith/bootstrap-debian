@@ -14,6 +14,7 @@ build_packages() {
 
     kitty
     fuzzel
+    fzf
     waybar
     xwayland
 

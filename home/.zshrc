@@ -80,7 +80,15 @@ ZSH_THEME="robbyrussell"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git vi-mode)
 
+# Show completion choices in an interactive, grouped menu.
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+
 source $ZSH/oh-my-zsh.sh
+
+# Ctrl-R opens fzf history search; Ctrl-T and Alt-C use its file and directory pickers.
+source <(fzf --zsh)
 
 # User configuration
 
