@@ -1,6 +1,7 @@
 # Debian Workstation Bootstrap
 
-https://www.debian.org/distrib/netinst amd64
+## amd64
+https://www.debian.org/distrib/netinst 
 
 A personal workstation installer for Debian 13 (trixie).
 
