@@ -1,7 +1,7 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-export PATH="$PATH:/opt:/opt/nvim-linux-x86_64/bin"
+# Keep locally installed tools, including Neovim and Yazi, ahead of system paths.
+typeset -U path
+path=("$HOME/.local/bin" $path)
+export PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"

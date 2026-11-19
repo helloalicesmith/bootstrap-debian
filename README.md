@@ -21,6 +21,8 @@ user configuration files.
 - Zsh with Oh My Zsh.
 - Catppuccin tmux theme, installed with the upstream-recommended manual method.
 - tmux and Vim as a fallback editor.
+- fzf and lazygit.
+- ripgrep and fd-find.
 - Neovim from the latest stable upstream release.
 - Yazi terminal file manager from the latest stable upstream release.
 - Firefox ESR and Thunar.
@@ -71,8 +73,6 @@ home/
       init.lua
 ```
 
-Neovim may use init.vim instead of init.lua.
-
 The installer deploys the configurations as-is. Keep required application
 autostart commands in the Sway configuration; installing a package alone
 does not enable its Sway autostart.
@@ -117,7 +117,8 @@ User configurations are symlinked into the home directory.
 Do not delete or move the repository after installation.
 Editing a deployed file also changes its source in the Git working tree.
 
-Add the following to home/.zshrc:
+Ensure `~/.local/bin` is included in `PATH`. The bundled `home/.zshrc`
+already contains this configuration:
 
 ```zsh
 typeset -U path
