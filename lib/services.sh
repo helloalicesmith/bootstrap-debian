@@ -130,7 +130,8 @@ EOF
     # Do not restart the active network connection.
     sudo systemctl enable \
         NetworkManager.service \
-        bluetooth.service
+        bluetooth.service \
+        tlp.service
 
     log 'Enabling user audio services'
 

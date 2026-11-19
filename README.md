@@ -16,6 +16,7 @@ user configuration files.
 - Waybar and Mako notifications.
 - PipeWire audio, WirePlumber and pavucontrol.
 - NetworkManager and Bluetooth utilities.
+- TLP power management.
 - Zsh with Oh My Zsh.
 - Catppuccin tmux theme, installed with the upstream-recommended manual method.
 - tmux and Vim as a fallback editor.

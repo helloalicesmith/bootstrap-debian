@@ -45,6 +45,7 @@ build_packages() {
 
     network-manager
     network-manager-gnome
+    tlp
     bluez
     blueman
 
